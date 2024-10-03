@@ -6,7 +6,6 @@ import json
 
 class TestBooksApi(unittest.TestCase):
     
-    
     def setUp(self):
         """
         setUp 
@@ -34,8 +33,9 @@ class TestBooksApi(unittest.TestCase):
         Make request false test
         """
         attr = {'json.return_value': dict()}
-        requests.get = Mock(return_value = Mock(status_code = 100))
-        self.assertEqual({}, dict())
+        requests.get = Mock(return_value = Mock(status_code = 404))
+        self.assertEqual(self.api.make_request("http://openlibrary.org/fchjbnkm"), None)
+    
     
     
     def test_make_request_connection_error(self):
@@ -54,12 +54,31 @@ class TestBooksApi(unittest.TestCase):
         """
         attr = {'json.return_value': dict()}
         requests.get = Mock(return_value = Mock(status_code = 200, **attr))
-        self.assertEqual(self.api.is_book_available(self.book), True)
         
+        self.assertEqual(self.api.is_book_available(self.book), True)
+    
+    @Mock('ext_api_interface.is_book_available')
     def test_is_book_available_false(self):
         """
         is Book available test (False)
         """
+        # attr = {'json.return_value': dict()}
+        # requests.get = Mock(return_value = Mock(status_code = 200, **attr))
+        self.assertEqual(self.api.is_book_available("Twlight"), False)
+    
+    @Mock('ext_api_interface.books_by_author_exists')
+    def test_books_by_author_exists(self):
+        """
+        Test books by author if author does exist test
+        """
         attr = {'json.return_value': dict()}
         requests.get = Mock(return_value = Mock(status_code = 200, **attr))
-        self.assertEqual(self.api.is_book_available("Twlight"), False)
+        self.assertIsNotNone(self.api.books_by_author("Mark Lutz"))
+        
+    def test_books_by_author_doesnt_exist(self):
+        """
+        Test books by author if author doesn't exist test
+        """
+        attr = {'json.return_value': dict()}
+        requests.get = Mock(return_value = Mock(status_code = 200, **attr))
+        self.assertEquals(self.api.books_by_author("Bob Krutz"), [])
