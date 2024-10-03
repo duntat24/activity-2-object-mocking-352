@@ -1,2 +1,5 @@
 virtualenv/
 **/__pycache__
+htmlcov/
+.coverage
+db.json
