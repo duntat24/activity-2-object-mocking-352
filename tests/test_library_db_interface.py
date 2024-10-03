@@ -72,3 +72,23 @@ class LibraryDBTest(unittest.TestCase):
         query = Query()
         self.test_library_db.update_patron(patron)
         self.test_library_db.db.update.assert_called_with(patron_dict, query.memberID == patron.get_memberID())
+
+    def test_retrieve_patron_doesnt_exist(self):
+        # Testing the return of retrieving if the patron is not found in the db
+        self.test_library_db.db.search = MagicMock(return_value = None) # forcing the db to indicate that the patron wasn't found
+        fetch_result = self.test_library_db.retrieve_patron(12345) # The passed id shouldn't matter
+        self.assertEqual(None, fetch_result)
+
+    def test_retrieve_patron_exists(self):
+        # Testing the return of retrieving a patron if a patron is returned by the db
+        self.test_library_db.db.search = MagicMock(return_value = [{"fname": "First", "lname": "Last", "age": "23", "memberID": "8675309"}]) # Forcing a result to be returned when attempting to retrieve from the library db
+        expected_result = Patron("First", "Last", "22", "8675309")
+        fetch_result = self.test_library_db.retrieve_patron(12345) # The passed id shouldn't matter
+        self.assertEqual(expected_result.get_memberID(), fetch_result.get_memberID()) # memberIDs are unique, so if they are the same then the objects are the same
+
+    def test_convert_patron_to_db_format(self):
+        # Testing converting a patron to the format expected by the db
+        test_patron = Patron("First", "Last", "25", "12345678")
+        expected_db_format = {"fname": "First", "lname": "Last", "age": "25", "memberID": "12345678", "borrowed_books": []}
+        result_db_format = self.test_library_db.convert_patron_to_db_format(test_patron)
+        self.assertEqual(expected_db_format, result_db_format)
