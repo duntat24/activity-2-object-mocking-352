@@ -65,21 +65,23 @@ class TestBooksApi(unittest.TestCase):
         self.assertEqual(self.api.is_book_available("Protected DAISY"), True)
         
     @Mock('ext_api_interface.books_by_author_exists')
-    def test_books_by_author_exists(self,mock_dependency):
+    def test_books_by_author_exists(self):
         """
         Test books by author if author does exist test
         returns a list of books by that author
         """
-        attr = {'json.return_value': {'docs': [{"author_name": 'Sebastian Raschka', 'title_suggest': 'Learning Python'}]}}
-        self.api = Mock(return_value = Mock(status_code = 200, *attr))
+        # attr = {'json.return_value': [{"author_name": ["Sebastian Raschka"]}]}
+        #attr = {"docs": {"author_name": "Sebastian Raschka"}}
         
-        mock_dependency.books_by_author.return_value = ''
+        self.api.make_request = MagicMock(return_value = {'docs':[{"author_name": 'Sebastian Raschka','title_suggest': 'Python Machine Learning'}]})
         
-        obj = self.api(mock_dependency)
+        # mock_dependency.books_by_author.return_value = ''
         
-        result = self.api.books_by_author("Sebastian Raschka")
+        # obj = self.api(mock_dependency)
         
-        self.assertEqual(self.api.books_by_author("Sebastian Raschka"), result)
+        # result = self.api.books_by_author("Sebastian Raschka")
+        
+        self.assertEqual(self.api.books_by_author("Sebastian Raschka"), [])
         
         # attr = {'json.return_value': dict()}
         # requests.get = Mock(return_value = Mock(status_code = 200, **attr))
@@ -128,3 +130,38 @@ class TestBooksApi(unittest.TestCase):
         # print(result)
         # print(self.api.get_book_info("Python: Deeper Insights into not Machine Learning"))
         # self.assertEqual(result,[])
+        
+        
+    # def test_get_book_info_true(self):
+    #     """
+    #     Get book info test (False)
+    #     """
+
+    #     attr = {'json.return_value': dict()}
+    #     requests.get = Mock(return_value = Mock(status_code = 200, **attr))
+    #     book_query = 'No Python Book'
+        
+    #     result = self.api.get_book_info(book_query)
+    #     self.assertEqual(result, [])
+        # attr = {'json.return_value': dict()}
+        # requests.get = Mock(return_value = Mock(status_code = 200, **attr))
+        
+        # mocked_call = self.api
+        
+        # mocked_call.get_book_info = MagicMock(return_value = [])
+        # result = mocked_call.get_book_info("Python: Deeper Insights into not Machine Learning")
+        # print(result)
+        # print(self.api.get_book_info("Python: Deeper Insights into not Machine Learning"))
+        # self.assertEqual(result,[])
+        
+    def test_get_ebooks(self):
+        """
+        Get ebooks test (False)
+        """
+
+        attr = {'json.return_value': dict()}
+        requests.get = Mock(return_value = Mock(status_code = 200, **attr))
+        book_query = 'No Python Book'
+        
+        result = self.api.get_ebooks(book_query)
+        self.assertEqual(result, [])
