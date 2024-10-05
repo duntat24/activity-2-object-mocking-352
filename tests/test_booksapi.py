@@ -64,14 +64,14 @@ class TestBooksApi(unittest.TestCase):
         requests.get = Mock(return_value = Mock(status_code = 200, **attr))
         self.assertEqual(self.api.is_book_available("Protected DAISY"), True)
         
-    @patch('ext_api_interface.requests.make_request')
+    @Mock('ext_api_interface.books_by_author_exists')
     def test_books_by_author_exists(self,mock_dependency):
         """
         Test books by author if author does exist test
         returns a list of books by that author
         """
         attr = {'json.return_value': dict()}
-        requests.get = Mock(return_value = Mock(status_code = 200, **attr))
+        self.make_request = Mock(return_value = Mock(books))
         
         mock_dependency.books_by_author.return_value = ''
         
