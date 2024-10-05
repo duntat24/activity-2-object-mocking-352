@@ -18,7 +18,6 @@ class TestBooksApi(unittest.TestCase):
             self.json_data = json.loads(f.read())
     
     
-    @Mock('ext_api_interface.make_request')
     def test_make_request_true(self):
         """
         Make request true test
@@ -27,13 +26,13 @@ class TestBooksApi(unittest.TestCase):
         requests.get = Mock(return_value = Mock(status_code = 200, **attr))
         self.assertEqual(self.api.make_request("http://openlibrary.org/search.json"), dict())
 
-    @Mock('ext_api_interface.make_request')
+    
     def test_make_request_false(self):
         """
         Make request false test
         """
         attr = {'json.return_value': dict()}
-        requests.get = Mock(return_value = Mock(status_code = 404))
+        requests.get = Mock(return_value = Mock(status_code = 100,**attr) )
         self.assertEqual(self.api.make_request("http://openlibrary.org/fchjbnkm"), None)
     
     
@@ -47,6 +46,15 @@ class TestBooksApi(unittest.TestCase):
         self.assertEqual(self.api.make_request(url), None)
     
     
+    def test_is_book_available_false(self):
+        """
+        is Book available test (False)
+        """
+        attr = {'json.return_value': dict()}
+        requests.get = Mock(return_value = Mock(status_code = 200, **attr))
+        
+        self.assertEqual(self.api.is_book_available(self.book), False)
+        
     @Mock('ext_api_interface.is_book_available')
     def test_is_book_available_true(self):
         """
@@ -54,17 +62,8 @@ class TestBooksApi(unittest.TestCase):
         """
         attr = {'json.return_value': dict()}
         requests.get = Mock(return_value = Mock(status_code = 200, **attr))
+        self.assertEqual(self.api.is_book_available("Protected DAISY"), True)
         
-        self.assertEqual(self.api.is_book_available(self.book), True)
-    
-    @Mock('ext_api_interface.is_book_available')
-    def test_is_book_available_false(self):
-        """
-        is Book available test (False)
-        """
-        # attr = {'json.return_value': dict()}
-        # requests.get = Mock(return_value = Mock(status_code = 200, **attr))
-        self.assertEqual(self.api.is_book_available("Twlight"), False)
     
     @Mock('ext_api_interface.books_by_author_exists')
     def test_books_by_author_exists(self):
@@ -73,7 +72,11 @@ class TestBooksApi(unittest.TestCase):
         """
         attr = {'json.return_value': dict()}
         requests.get = Mock(return_value = Mock(status_code = 200, **attr))
-        self.assertIsNotNone(self.api.books_by_author("Mark Lutz"))
+        
+        
+        
+        self.assertEquals(self.api.books_by_author("Mark Lutz"),["Learning Python","Learning Python, Second Edition", "Learning Python (Learning)", "Python Machine Learning"])
+        #["Learning Python","Learning Python, Second Edition", "Learning Python (Learning)", "Python Machine Learning"
         
     def test_books_by_author_doesnt_exist(self):
         """
@@ -81,4 +84,4 @@ class TestBooksApi(unittest.TestCase):
         """
         attr = {'json.return_value': dict()}
         requests.get = Mock(return_value = Mock(status_code = 200, **attr))
-        self.assertEquals(self.api.books_by_author("Bob Krutz"), [])
+        self.assertEqual(self.api.books_by_author("Bob Krutz"), [])
