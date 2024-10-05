@@ -65,21 +65,21 @@ class TestBooksApi(unittest.TestCase):
         self.assertEqual(self.api.is_book_available("Protected DAISY"), True)
         
     
-    # def test_books_by_author_exists(self):
-    #     """
-    #     Test books by author if author does exist test
-    #     returns a list of books by that author
-    #     """
-    #     attr = {'json.return_value': dict()}
-    #     requests.get = Mock(return_value = Mock(status_code = 200, **attr))
+    def test_books_by_author_exists(self):
+        """
+        Test books by author if author does exist test
+        returns a list of books by that author
+        """
+        attr = {'json.return_value': dict()}
+        requests.get = Mock(return_value = Mock(status_code = 200, **attr))
         
-    #     mocked_call = self.api
+        mocked_call = self.api
         
-    #     mocked_call.books_by_author = MagicMock(return_value = {"Python: Deeper Insights into Machine Learning"} )
-    #     result = mocked_call.books_by_author("Sebastian Raschka")
+        mocked_call.books_by_author = MagicMock(return_value = {"Python: Deeper Insights into Machine Learning"} )
+        result = mocked_call.books_by_author("Sebastian Raschka")
         
-    #     # mocked_call.books_by_author.assert_called_with("Sebastian Raschka")
-    #     self.assertEqual(result,self.api.books_by_author("Sebastian Raschka"))
+        # mocked_call.books_by_author.assert_called_with("Sebastian Raschka")
+        self.assertEqual(result,self.api.books_by_author("Sebastian Raschka"))
         
         # mock_call = Mock(self.api.books_by_author("Mark Lutz"))
         # print(mock_call)
