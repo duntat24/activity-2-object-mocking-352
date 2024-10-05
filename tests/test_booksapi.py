@@ -70,8 +70,8 @@ class TestBooksApi(unittest.TestCase):
         Test books by author if author does exist test
         returns a list of books by that author
         """
-        attr = {'json.return_value': {'docs': [{"author_name": 'Sebastian Raschka'}]}}
-        self.make_request = Mock(return_value = Mock(status_code = 200, *attr) )
+        attr = {'json.return_value': {'docs': [{"author_name": 'Sebastian Raschka', 'title_suggest': 'Learning Python'}]}}
+        self.api = Mock(return_value = Mock(status_code = 200, *attr))
         
         mock_dependency.books_by_author.return_value = ''
         
