@@ -73,10 +73,10 @@ class TestBooksApi(unittest.TestCase):
         attr = {'json.return_value': dict()}
         requests.get = Mock(return_value = Mock(status_code = 200, **attr))
         
-        mocked_call = self.api
+        # mocked_call = self.api
         
-        mocked_call.books_by_author = MagicMock(return_value = {"Python: Deeper Insights into Machine Learning"} )
-        result = mocked_call.books_by_author("Sebastian Raschka")
+        self.api.books_by_author = MagicMock()
+        result = self.api.books_by_author("Sebastian Raschka")
         
         # mocked_call.books_by_author.assert_called_with("Sebastian Raschka")
         self.assertEqual(result,self.api.books_by_author("Sebastian Raschka"))
