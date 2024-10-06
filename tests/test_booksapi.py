@@ -82,50 +82,6 @@ class TestBooksApi(unittest.TestCase):
         
         self.assertEqual(actual, expected)
         
-        # authorbooks_info = "http://openlibrary.org/search.json?author=Sebastian Raschka"
-        # self.api.make_request.assert_called_with(authorbooks_info)
-        
-        # attr = {'json.return_value':  {"docs": [{"author_name": ["Sebastian Raschka"]}]}}
-        # requests.get = Mock(return_value = MagicMock(status_code = 200, **attr))
-        # self.assertEqual(self.api.books_by_author("Sebastian Raschka"),attr)
-        
-        
-        
-        
-        # attr = {'json.return_value': [{"author_name": ["Sebastian Raschka"]}]}
-        #attr = {"docs": {"author_name": "Sebastian Raschka"}}
-        # {'json.return_value': {"author_name": 'Sebastian Raschka'}.json()}
-        
-        # self.api.make_request = MagicMock(return_value =self.json_data)
-        
-        # self.api.make_request("http://openlibrary.org/search.json")
-        
-        # books = self.api.books_by_author('Sebastian Raschka')
-        
-        # expected_books = ['Learning python']
-        
-        # print(self.api.make_request)
-        # print(self.api.books_by_author("Sebastian Raschka"))
-        # self.assertEqual(books, expected_books)
-        
-        # attr = {'json.return_value': dict()}
-        # requests.get = Mock(return_value = Mock(status_code = 200, **attr))
-        
-
-        
-        # mock = Mock()
-        # mock.self.api.books_by_author("Sebastian Raschka")
-        
-        # result = self.api.books_by_author("Sebastian Raschka")
-        
-        # mocked_call.books_by_author.assert_called_with("Sebastian Raschka")
-        # self.assertEqual(self.api.books_by_author("Sebastian Raschka"), [])
-        
-        # mock_call = Mock(self.api.books_by_author("Mark Lutz"))
-        # print(mock_call)
-        # self.assertEquals(mock_call,["Learning Python","Learning Python, Second Edition", "Learning Python (Learning)", "Python Machine Learning"])
-        #["Learning Python","Learning Python, Second Edition", "Learning Python (Learning)", "Python Machine Learning"
-        
     def test_books_by_author_false(self):
         """
         Test books by author if author doesn't exist test
