@@ -1,0 +1,8 @@
+[
+    {"title": "Name of the Wind", "ebook_count": 5}, 
+    {"title": "Wise Mans fear", "ebook_count": 3}, 
+    {"title": "Nine Princes of Amber", "ebook_count": 2}, 
+    {"title": "Seymour: an Introduction", "ebook_count": 1}, 
+    {"title": "Eragon", "ebook_count": 2}, 
+    {"title": "Penric's Demon", "ebook_count": 2},
+]
