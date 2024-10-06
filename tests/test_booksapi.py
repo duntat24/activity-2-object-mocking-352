@@ -64,16 +64,32 @@ class TestBooksApi(unittest.TestCase):
         requests.get = Mock(return_value = Mock(status_code = 200, **attr))
         self.assertEqual(self.api.is_book_available("Protected DAISY"), True)
         
-    @Mock('ext_api_interface.books_by_author_exists')
+ 
     def test_books_by_author_exists(self):
         """
         Test books by author if author does exist test
         returns a list of books by that author
         """
         
-        attr = {'json.return_value':  {"docs": [{"author_name": ["Sebastian Raschka"]}]}}
-        requests.get = Mock(return_value = MagicMock(status_code = 200, **attr))
-        self.assertEqual(self.api.books_by_author("Sebastian Raschka"),attr)
+        attr = {"docs": [{"title_suggest": "Python Machine Learning"}]}
+        self.api.make_request = MagicMock(return_value=attr)
+        
+        actual = self.api.books_by_author("Sebastian Raschka")
+        expected = ['Python Machine Learning']
+        
+        authorbooks_info = "http://openlibrary.org/search.json?author=Sebastian Raschka"
+        self.api.make_request.assert_called_with(authorbooks_info)
+        
+        self.assertEqual(actual, expected)
+        
+        # authorbooks_info = "http://openlibrary.org/search.json?author=Sebastian Raschka"
+        # self.api.make_request.assert_called_with(authorbooks_info)
+        
+        # attr = {'json.return_value':  {"docs": [{"author_name": ["Sebastian Raschka"]}]}}
+        # requests.get = Mock(return_value = MagicMock(status_code = 200, **attr))
+        # self.assertEqual(self.api.books_by_author("Sebastian Raschka"),attr)
+        
+        
         
         
         # attr = {'json.return_value': [{"author_name": ["Sebastian Raschka"]}]}
@@ -162,15 +178,15 @@ class TestBooksApi(unittest.TestCase):
         """
         Test get ebooks (True)
         """
-        ebooks = [{"title": "Learning Python", "ebook_count": 3}, {"title": "Learning Python (Learning)", "ebook_count": 1}, {"title": "Learning Python", "ebook_count": 1}, {"title": "Learn to Program Using Python", "ebook_count": 1}, {"title": "Aprendendo Python", "ebook_count": 1}, {"title": "Python Basics", "ebook_count": 1}]
-        attr = [{"title": "Learning Python", "ebook_count": 3}]
+        attr = {"docs": [{"title": "Learning Python", "ebook_count_i": 3}]}
         self.api.make_request = MagicMock(return_value=attr)
         
+        actual = self.api.get_ebooks('Learning Python')
+        expected = [{"title": "Learning Python", "ebook_count": 3}]
+        
+        ebooks_info = "http://openlibrary.org/search.json?q=Learning Python"
+        self.api.make_request.assert_called_with(ebooks_info)
+        
+        self.assertEqual(actual, expected)
+        
       
-        actual = self.api.get_ebooks("Learning Python")
-        
-        ebooks_url= "http://openlibrary.org/search.json?q=Learning Python"
-        self.api.make_request.assert_called_with(ebooks_url)
-        
-        expected = [{'title': "Learning Python", 'ebook_count': 3}]
-        self.assertEqual(ebooks,expected)
