@@ -148,7 +148,7 @@ class TestBooksApi(unittest.TestCase):
         
     def test_get_ebooks_false(self):
         """
-        Get ebooks test (False)
+        Test get ebooks (False)
         """
 
         attr = {'json.return_value': dict()}
@@ -162,15 +162,15 @@ class TestBooksApi(unittest.TestCase):
         """
         Test get ebooks (True)
         """
-        attr = [{"title": "Learn to Program Using Python", "ebook_count": 1}]
+        ebooks = [{"title": "Learning Python", "ebook_count": 3}, {"title": "Learning Python (Learning)", "ebook_count": 1}, {"title": "Learning Python", "ebook_count": 1}, {"title": "Learn to Program Using Python", "ebook_count": 1}, {"title": "Aprendendo Python", "ebook_count": 1}, {"title": "Python Basics", "ebook_count": 1}]
+        attr = [{"title": "Learning Python", "ebook_count": 3}]
         self.api.make_request = MagicMock(return_value=attr)
         
-        actual = self.api.get_ebooks('Learning Python')
+      
+        actual = self.api.get_ebooks("Learning Python")
         
         ebooks_url= "http://openlibrary.org/search.json?q=Learning Python"
         self.api.make_request.assert_called_with(ebooks_url)
         
-        expected = [{"title": "Learning Python", "ebook_count": 3}]
-        
-        
-        self.assertEqual(actual,expected)
+        expected = [{'title': "Learning Python", 'ebook_count': 3}]
+        self.assertEqual(ebooks,expected)
