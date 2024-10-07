@@ -1,6 +1,6 @@
 import unittest
 from library import ext_api_interface
-from unittest.mock import Mock, MagicMock
+from unittest.mock import Mock, MagicMock, patch
 import requests
 import json
 
@@ -55,15 +55,14 @@ class TestBooksApi(unittest.TestCase):
         
         self.assertEqual(self.api.is_book_available(self.book), False)
         
-    @Mock('ext_api_interface.is_book_available')
+  
     def test_is_book_available_true(self):
         """
         is Book available test (True)
         """
-        attr = {'json.return_value': dict()}
-        requests.get = Mock(return_value = Mock(status_code = 200, **attr))
-        self.assertEqual(self.api.is_book_available("Protected DAISY"), True)
-        
+        attr = {'docs': [{'title': 'Learning Python', 'author_name': ['Mark Lutz', 'David Ascher']}]}
+        self.api.make_request = Mock(return_value=attr)
+        self.assertEqual(self.api.is_book_available("Learning Python"),True)
  
     def test_books_by_author_exists(self):
         """
