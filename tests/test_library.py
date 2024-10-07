@@ -13,7 +13,7 @@ class TestLibrary(unittest.TestCase):
         self.lib = library.Library()
         with open('tests/library_test_data/books.txt', 'r') as f:
             self.books_data = json.loads(f.read())
-        with open('tests/library_test_data/books.txt', 'r') as f2:
+        with open('tests/library_test_data/import_json.txt', 'r') as f2:
             self.json_import = json.loads(f2.read())
 
     ############################################################################

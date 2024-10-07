@@ -72,7 +72,7 @@ class TestBooksApi(unittest.TestCase):
         """
         
         attr = {"docs": [{"title_suggest": "Python Machine Learning"}]}
-        self.api.make_request = MagicMock(return_value=attr)
+        self.api.make_request = Mock(return_value=attr)
         
         actual = self.api.books_by_author("Sebastian Raschka")
         expected = ['Python Machine Learning']
@@ -87,7 +87,7 @@ class TestBooksApi(unittest.TestCase):
         Test books by author if author doesn't exist test
         """
         attr = {'json.return_value': dict()}
-        requests.get = Mock(return_value = MagicMock(status_code = 200, **attr))
+        requests.get = Mock(return_value = Mock(status_code = 200, **attr))
         self.assertEqual(self.api.books_by_author("Bob Krutz"), [])
         
     def test_get_book_info_doesnt_exist(self):
@@ -108,7 +108,7 @@ class TestBooksApi(unittest.TestCase):
         Get book info test (True)
         """
         attr = {'docs': [{'title': 'Learning Python', 'publisher': 'O\'Reilly Media', 'publish_year': [1999], 'language': ['eng']}]}
-        self.api.make_request = MagicMock(return_value=attr)
+        self.api.make_request = Mock(return_value=attr)
 
         bookinfo = self.api.get_book_info("Learning Python")
         
@@ -124,7 +124,7 @@ class TestBooksApi(unittest.TestCase):
         """
 
         attr = {'json.return_value': dict()}
-        requests.get = MagicMock(return_value = MagicMock(status_code = 200, **attr))
+        requests.get = Mock(return_value = Mock(status_code = 200, **attr))
         book_query = 'No Python Book'
         
         result = self.api.get_ebooks(book_query)
@@ -135,7 +135,7 @@ class TestBooksApi(unittest.TestCase):
         Test get ebooks (True)
         """
         attr = {"docs": [{"title": "Learning Python", "ebook_count_i": 3}]}
-        self.api.make_request = MagicMock(return_value=attr)
+        self.api.make_request = Mock(return_value=attr)
         
         actual = self.api.get_ebooks('Learning Python')
         expected = [{"title": "Learning Python", "ebook_count": 3}]
