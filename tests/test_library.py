@@ -58,7 +58,7 @@ class TestLibrary(unittest.TestCase):
     # Test is_book_by_author
 
     def test_is_book_by_author_real_real(self):
-        self.lib.api.get_ebooks = Mock(return_value=self.json_import)
+        self.lib.api.make_request = Mock(return_value=self.json_import)
         self.assertTrue(self.lib.is_book_by_author('Matthew Kirk', 'Thoughtful Machine Learning with Python'))
    
     def test_is_book_by_author_real_fake(self):
