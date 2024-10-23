@@ -58,19 +58,19 @@ class TestLibrary(unittest.TestCase):
     # Test is_book_by_author
 
     def test_is_book_by_author_real_real(self):
-        self.lib.api.make_request = Mock(return_value=self.json_import)
+        self.lib.api.books_by_author = Mock(return_value=['Thoughtful Machine Learning with Python'])
         self.assertTrue(self.lib.is_book_by_author('Matthew Kirk', 'Thoughtful Machine Learning with Python'))
    
     def test_is_book_by_author_real_fake(self):
-        self.lib.api.get_ebooks = Mock(return_value=self.json_import)
+        self.lib.api.books_by_author = Mock(return_value=[]) # This author has no books, so making a request for their books should return nothing
         self.assertFalse(self.lib.is_book_by_author('Matty Jean Lu Picard', 'Thoughtful Machine Learning with Python'))
         
     def test_is_book_by_author_fake_real(self):
-        self.lib.api.get_ebooks = Mock(return_value=self.json_import)
+        self.lib.api.books_by_author = Mock(return_value=['Thoughtful Machine Learning with Python'])
         self.assertFalse(self.lib.is_book_by_author('Matthew Kirk', 'Thoughtless Machine Learning with Mamba'))
         
     def test_is_book_by_author_fake_fake(self):
-        self.lib.api.get_ebooks = Mock(return_value=self.json_import)
+        self.lib.api.books_by_author = Mock(return_value=[])
         self.assertFalse(self.lib.is_book_by_author('Matty Jean Lu Picard', 'Thoughtless Machine Learning with Mamba'))
 
 
