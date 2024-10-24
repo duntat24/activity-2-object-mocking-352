@@ -4,7 +4,7 @@ from unittest.mock import Mock
 
 from library.library_db_interface import Library_DB
 from library.patron import *
-from tinydb import Query
+from tinydb import Query, TinyDB
 
 class LibraryDBTest(unittest.TestCase):
 
@@ -13,6 +13,9 @@ class LibraryDBTest(unittest.TestCase):
         self.test_library_db = Library_DB()
         self.test_library_db.db.close() # We need to close the db since its been opened
         self.test_library_db.db = Mock() # Replacing the db with a mock object that we can control
+
+    def test_correct_db_path(self):
+        self.assertEqual(self.test_library_db.DATABASE_FILE, "db.json")
 
     def test_close_db(self):
         # Tests that the db's close method is invoked when we attempt to close the db through the interface
@@ -58,6 +61,8 @@ class LibraryDBTest(unittest.TestCase):
         self.test_library_db.db.insert = MagicMock(return_value = result_id) # forcing a specific ID to be returned when atttempting to insert
         self.test_library_db.db.search = MagicMock(return_value = None) # forcing no result to be found when searching the db
         add_result = self.test_library_db.insert_patron(patron)
+        
+        self.test_library_db.db.insert.assert_called_with(self.test_library_db.convert_patron_to_db_format(patron)) # Verifies that the insert method was called with the correct parameters
         self.assertEqual(result_id, add_result)
 
     def test_update_patron_none(self):
@@ -83,7 +88,10 @@ class LibraryDBTest(unittest.TestCase):
         # Testing the return of retrieving a patron if a patron is returned by the db
         self.test_library_db.db.search = MagicMock(return_value = [{"fname": "First", "lname": "Last", "age": "23", "memberID": "8675309"}]) # Forcing a result to be returned when attempting to retrieve from the library db
         expected_result = Patron("First", "Last", "22", "8675309")
-        fetch_result = self.test_library_db.retrieve_patron(12345) # The passed id shouldn't matter
+        fetch_result = self.test_library_db.retrieve_patron("8675309") # The passed id doesn't matter, but we want to mimic correct behavior
+
+        query = Query()
+        self.test_library_db.db.search.assert_called_with(query.memberID == expected_result.get_memberID())
         self.assertEqual(expected_result.get_memberID(), fetch_result.get_memberID()) # memberIDs are unique, so if they are the same then the objects are the same
 
     def test_convert_patron_to_db_format(self):
