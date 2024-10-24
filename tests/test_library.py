@@ -49,6 +49,10 @@ class TestLibrary(unittest.TestCase):
         self.lib.api.get_ebooks = Mock(return_value=[self.books_data[0]]) # books_data[0] is the entry 'Name of the wind'
         self.assertTrue(self.lib.get_ebooks_count('Name of the Wind') > 0)
 
+    def test_get_ebooks_count_real_multiple(self):
+        self.lib.api.get_ebooks = Mock(return_value=self.books_data) # books_data[0] is the entry 'Name of the wind'
+        self.assertEquals(self.lib.get_ebooks_count("Any Name cuz it's not specific"), 17)
+
     def test_get_ebooks_count_fake(self):
          self.lib.api.get_ebooks = Mock(return_value=[])
          self.assertFalse(self.lib.get_ebooks_count('Fake Book'))
@@ -94,19 +98,6 @@ class TestLibrary(unittest.TestCase):
         id = self.lib.register_patron("Miles", "Tallia", "20", "2004")
         self.assertEqual(id, 2004)
 
-    def test_register_patron_none(self):
-        patronFirst = "Miles"
-        patronLast = "Tallia"
-        patronAge = "20"
-        patronID = "2004"
-
-        self.lib.register_patron = MagicMock(return_value = 2004)
-        id = self.lib.register_patron(patronFirst,patronLast,patronAge,patronID)
-
-        Patron.assert_called_with(patronFirst,patronLast,patronAge,patronID)
-        self.assertEqual(id, 2004)
-
-
 
     # Test is_patron_registered
 
@@ -117,12 +108,10 @@ class TestLibrary(unittest.TestCase):
         self.lib.db.retrieve_patron = MagicMock(return_value = patron)
         self.assertTrue(self.lib.is_patron_registered(patron))
 
-    # def test_is_patron_not_registered(self):
-    #     self.lib.db.insert_patron = MagicMock(return_value = 211)
-    #     patroon = Patron("Fake", "Guy", "4", "211")
-    #     patron = Patron("Miles", "Tallia", "20", "2004")
-    #     self.lib.db.retrieve_patron = MagicMock(return_value = patron)
-    #     self.assertFalse(self.lib.is_patron_registered(patroon))
+    def test_is_patron_not_registered(self):
+        self.lib.db.retrieve_patron = MagicMock(return_value = None)
+        patron = Patron("Miles", "Tallia", "20", "2004")
+        self.assertFalse(self.lib.is_patron_registered(patron))
 
         
 
