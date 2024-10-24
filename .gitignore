@@ -1,5 +1,7 @@
 virtualenv/
 **/__pycache__
-htmlcov/
+**/htmlcov
 .coverage
 db.json
+XXdb.jsonXX
+.mutmut-cache
