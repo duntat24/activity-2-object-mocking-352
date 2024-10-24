@@ -3,3 +3,5 @@ virtualenv/
 **/htmlcov
 .coverage
 db.json
+XXdb.jsonXX
+.mutmut-cache
