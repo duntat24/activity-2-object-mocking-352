@@ -63,6 +63,7 @@ class TestBooksApi(unittest.TestCase):
         attr = {'docs': [{'title': 'Learning Python', 'author_name': ['Mark Lutz', 'David Ascher']}]}
         self.api.make_request = Mock(return_value=attr)
         self.assertEqual(self.api.is_book_available("Learning Python"),True)
+        self.api.make_request.assert_called_with("%s?q=%s" % (self.api.API_URL, "Learning Python")) # Verify that make_request is called with the correct request URL
         
  
     def test_books_by_author_exists(self):
@@ -144,5 +145,18 @@ class TestBooksApi(unittest.TestCase):
         self.api.make_request.assert_called_with(ebooks_info)
         
         self.assertEqual(actual, expected)
+
+    def test_get_ebooks_one_available(self):
+        """
+        Verifying we get the appropriate result when attempting to get data about an ebook with 1 copy available
+        """
+        fetch_result = {"docs": [{"title": "Aprendendo Python", "ebook_count_i": 1}]}
+        self.api.make_request = Mock(return_value=fetch_result) # ensuring we get an ebook with 1 copy available when making our request
+
+        ebooks_result = self.api.get_ebooks("Aprendendo Python")
+        expected = [{"title": "Aprendendo Python", "ebook_count": 1}]
+
+        self.api.make_request.assert_called_with("%s?q=%s" % (self.api.API_URL, "Aprendendo Python")) # ensuring that the make_request method is receiving the correct request URL
+        self.assertTrue(expected, ebooks_result)
         
       
